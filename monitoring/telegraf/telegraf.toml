@@ -1,3 +1,13 @@
+[agent]
+  interval = "60s"
+  round_interval = true
+  metric_batch_size = 1000
+  metric_buffer_limit = 10000
+  collection_jitter = "0s"
+  flush_interval = "10s"
+  flush_jitter = "0s"
+  precision = ""
+
 # Configuration for sending metrics to InfluxDB 2.0
 [[outputs.influxdb_v2]]
   ## The URLs of the InfluxDB cluster nodes.
@@ -64,13 +74,13 @@
   ##   example: agents = ["udp://127.0.0.1:161"]
   ##            agents = ["tcp://127.0.0.1:161"]
   ##            agents = ["udp4://v4only-snmp-agent"]
-  # agents = ["udp://127.0.0.1:161"]
+  agents = ["udp://192.168.226.131:161"]
 
   ## Timeout for each request.
   # timeout = "5s"
 
   ## SNMP version; can be 1, 2, or 3.
-  # version = 3
+  version = 3
 
   ## Unconnected UDP socket
   ## When true, SNMP reponses are accepted from any address not just
@@ -81,7 +91,7 @@
   ## Path to mib files
   ## Used by the gosmi translator.
   ## To add paths when translating with netsnmp, use the MIBDIRS environment variable
-  # path = ["/usr/share/snmp/mibs"]
+  #path = ["/usr/share/snmp/mibs"]
 
   ## SNMP community string.
   # community = "public"
@@ -98,21 +108,21 @@
   ## SNMPv3 authentication and encryption options.
   ##
   ## Security Name.
-  # sec_name = "myuser"
+  sec_name = "vyos"
   ## Authentication protocol; one of "MD5", "SHA", "SHA224", "SHA256", "SHA384", "SHA512" or "".
-  # auth_protocol = "MD5"
+  auth_protocol = "SHA"
   ## Authentication password.
-  # auth_password = "pass"
+  auth_password = "vyos12345678"
   ## Security Level; one of "noAuthNoPriv", "authNoPriv", or "authPriv".
-  # sec_level = "authNoPriv"
+  sec_level = "authPriv"
   ## Context Name.
   # context_name = ""
   ## Privacy protocol used for encrypted messages; one of "DES", "AES", "AES192", "AES192C", "AES256", "AES256C", or "".
   ### Protocols "AES192", "AES192", "AES256", and "AES256C" require the underlying net-snmp tools
   ### to be compiled with --enable-blumenthal-aes (http://www.net-snmp.org/docs/INSTALL.html)
-  # priv_protocol = ""
+  priv_protocol = "AES"
   ## Privacy password used for encrypted messages.
-  # priv_password = ""
+  priv_password = "vyos12345678"
 
   ## Add fields and tables defining the variables you wish to collect.  This
   ## example collects the system uptime and interface variables.  Reference the

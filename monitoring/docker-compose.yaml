@@ -3,22 +3,31 @@ version: '3'
 services:
   influxdb:
     image: influxdb:2.4.0
-    ports:
-    - '8086:8086'
-    links:
-      - telegraf
+    container_name: influxdb
     environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
       - DOCKER_INFLUXDB_INIT_USERNAME=admin
       - DOCKER_INFLUXDB_INIT_PASSWORD=test1234
       - DOCKER_INFLUXDB_INIT_ORG=screencouples
       - DOCKER_INFLUXDB_INIT_BUCKET=networks
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=security-t0ken
+    networks:
+      - monitoring
+    ports:
+    - '8086:8086'
     volumes:
       - type: volume
-        source: influxdb
+        source: influxdb-config
         target: /etc/influxdb2/
+      - type: volume
+        source: influxdb2-data
+        target: /var/lib/influxdb2
+
   telegraf:
     image: telegraf:1.24
+    container_name: telegraf
+    networks:
+      - monitoring
     ports:
       - '8092:8092'
       - '8094:8094'
@@ -26,11 +35,11 @@ services:
       - influxdb
     volumes:
       - type: bind
-        source: ./telegraf/telegraf.toml
-        target: /etc/telegraf/telegraf.toml
+        source: ./telegraf/
+        target: /etc/telegraf/
       - type: bind
-        source: ./vyos_mibs/
-        target: /usr/share/snmp/mibs/
+        source: ./mibs/vyos/
+        target: /usr/share/snmp/mibs
     entrypoint: 'telegraf --config /etc/telegraf/telegraf.toml'
     depends_on: 
       - influxdb
@@ -40,4 +49,5 @@ networks:
     name: screencouples-monitoring
 
 volumes:
-  influxdb:
+  influxdb-config: {}
+  influxdb2-data: {}
