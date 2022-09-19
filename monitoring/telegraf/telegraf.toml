@@ -132,14 +132,14 @@
     name = "uptime"
 
   [[inputs.snmp.field]]
-    oid = "RFC1213-MIB::sysName.0"
-    name = "source"
+    oid = "SNMPv2-MIB::sysName.0"
+    name = "hostname"
     is_tag = true
 
   [[inputs.snmp.table]]
-    oid = "IF-MIB::ifTable"
+    oid = "IF-MIB::ifXTable"
     name = "interface"
-    inherit_tags = ["source"]
+    inherit_tags = ["hostname"]
 
     [[inputs.snmp.table.field]]
       oid = "IF-MIB::ifDescr"
