@@ -2,7 +2,7 @@ version: '3'
 
 services:
   influxdb:
-    image: influxdb:2.4.0
+    image: influxdb:2.3
     container_name: influxdb
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
@@ -42,24 +42,6 @@ services:
         target: /usr/share/snmp/mibs
     entrypoint: 'telegraf --config /etc/telegraf/telegraf.toml'
     depends_on: 
-      - influxdb
-  grafana:
-    image: grafana/grafana-oss:9.1.5
-    container_name: grafana
-    networks:
-      - monitoring
-    ports:
-      - '3000:3000'
-    links:
-      - influxdb
-    environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=test1234
-    volumes:
-      - type: volume
-        source: grafana-storage
-        target: /var/lib/grafana
-    depends_on:
       - influxdb
 
 networks:

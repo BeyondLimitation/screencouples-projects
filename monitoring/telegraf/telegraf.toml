@@ -1,5 +1,5 @@
 [agent]
-  interval = "60s"
+  interval = "30s"
   round_interval = true
   metric_batch_size = 1000
   metric_buffer_limit = 10000
@@ -7,6 +7,8 @@
   flush_interval = "10s"
   flush_jitter = "0s"
   precision = ""
+
+  omit_hostname = true
 
 # Configuration for sending metrics to InfluxDB 2.0
 [[outputs.influxdb_v2]]
@@ -34,7 +36,7 @@
   # exclude_bucket_tag = false
 
   ## Timeout for HTTP messages.
-  # timeout = "5s"
+  timeout = "15s"
 
   ## Additional HTTP headers
   # http_headers = {"X-Special-Header" = "Special-Value"}
@@ -124,24 +126,45 @@
   ## Privacy password used for encrypted messages.
   priv_password = "vyos12345678"
 
+
+  ## SNMP setting
+
   ## Add fields and tables defining the variables you wish to collect.  This
   ## example collects the system uptime and interface variables.  Reference the
   ## full plugin documentation for configuration details.
+  
   [[inputs.snmp.field]]
-    oid = "RFC1213-MIB::sysUpTime.0"
+    oid = "SNMPv2-MIB::sysUpTime.0"
     name = "uptime"
 
   [[inputs.snmp.field]]
     oid = "SNMPv2-MIB::sysName.0"
-    name = "hostname"
+    name = "source"
     is_tag = true
 
+  ## Table 1
   [[inputs.snmp.table]]
-    oid = "IF-MIB::ifXTable"
-    name = "interface"
-    inherit_tags = ["hostname"]
+    name = "ifXTable"
+    index_as_tag = true
+    inherit_tags = ["source"]
+
+  [[inputs.snmp.table.field]]
+    oid = "IF-MIB::ifXEntry.1"
+    name = "ifName"
+  [[inputs.snmp.table.field]]
+    oid = "IF-MIB::ifXEntry.18"
+    name = "ifAlias"
+
+  ## Table 2
+  [[inputs.snmp.table]]
+    name = "ifTable"
+    index_as_tag = true
+    inherit_tags = ["source"]
 
     [[inputs.snmp.table.field]]
-      oid = "IF-MIB::ifDescr"
-      name = "ifDescr"
-      is_tag = true
+    name = "ifIndex"
+    oid = "IF-MIB::ifIndex"
+
+    [[inputs.snmp.table.field]]
+    name = "ifAdminStatus"
+    oid = "IF-MIB::ifEntry.7"
