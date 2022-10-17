@@ -168,3 +168,18 @@
     [[inputs.snmp.table.field]]
     name = "ifAdminStatus"
     oid = "IF-MIB::ifEntry.7"
+    is_tag = true
+  
+###############################################################################
+#                            PROCESSOR PLUGINS                                #
+###############################################################################
+[[processors.enum]]
+  [[processors.enum.mapping]]
+  ## Name of the field to map.
+  tag = "ifAdminStatus"
+  dest = "ifAdminStatus_name"
+
+  [processors.enum.mapping.value_mappings]
+  1 = "UP"
+  2 = "DOWN"
+  3 = "TESTING"
