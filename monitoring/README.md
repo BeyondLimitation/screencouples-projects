@@ -9,6 +9,11 @@
 
 Docker : 20.10.17
 
+Influx DB : v2.3.0+SNAPSHOT.090f681737
+
+Flux : v0.171.0
+
+Telegraf : 1.24
 
 ## 참고 자료
 
