@@ -1,10 +1,10 @@
 [agent]
-  interval = "30s"
+  interval = "1s"
   round_interval = true
   metric_batch_size = 1000
   metric_buffer_limit = 10000
   collection_jitter = "0s"
-  flush_interval = "10s"
+  flush_interval = "1s"
   flush_jitter = "0s"
   precision = ""
 
@@ -36,7 +36,7 @@
   # exclude_bucket_tag = false
 
   ## Timeout for HTTP messages.
-  timeout = "15s"
+  timeout = "2s"
 
   ## Additional HTTP headers
   # http_headers = {"X-Special-Header" = "Special-Value"}
@@ -79,7 +79,7 @@
   agents = ["udp://192.168.226.131:161"]
 
   ## Timeout for each request.
-  # timeout = "5s"
+  timeout = "1s"
 
   ## SNMP version; can be 1, 2, or 3.
   version = 3
@@ -102,7 +102,7 @@
   # agent_host_tag = "agent_host"
 
   ## Number of retries to attempt.
-  # retries = 3
+  retries = 3
 
   ## The GETBULK max-repetitions parameter.
   # max_repetitions = 10
