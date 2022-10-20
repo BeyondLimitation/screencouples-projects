@@ -1,0 +1,6 @@
+- name: "Control Node에서 작동"
+  hosts: all
+  tasks:
+
+  - name: "시험용"
+    shell: echo "testing ansible in localhost... if u can read this, it works" > ~/test.txt
