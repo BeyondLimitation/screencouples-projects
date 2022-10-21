@@ -1,15 +1,12 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# All Vagrant configuration is done below. The "2" in Vagrant.configure
-# configures the configuration version (we support older styles for
-# backwards compatibility). Please don't change it unless you know what
-# you're doing.
-
 Vagrant.configure("2") do |config|
 
   # 기본 VM Box 설정
   config.vm.box = "hashicorp/bionic64"
+  # SSH 필수 설정
+  config.ssh.insert_key = false
 
   #VMware Workstation Pro 내 모든 VM설정
   config.vm.provider "vmware_workstation" do |hv|
@@ -18,6 +15,10 @@ Vagrant.configure("2") do |config|
     hv.vmx["numvcpus"] = "1"
   end
 
+  # SSH Key 설정
+  config.ssh.private_key_path = ["./ssh_key/lab.pem", "~/.vagrant.d/insecure_private_key"]
+  config.vm.provision "file", source: "./ssh_key/authorized_keys", destination: "~/.ssh/authorized_keys"
+
   # Node 생성
   N = 3
   (1..N).each do |n|
@@ -25,20 +26,17 @@ Vagrant.configure("2") do |config|
 
         node.vm.network "private_network", ip: "192.168.100.#{n+7}"
         node.vm.hostname = "node#{n}.internal"
-  
-        # SSH Key 추가 등록
-        node.vm.provision "shell", inline: "cat /vagrant/ssh_key/authorized_keys >> ~/.ssh/authorized_keys", privileged: false
+        node.vm.boot_timeout = 60
 
     end
   end
 
   config.vm.define "control" do |control|
+
     control.vm.network "private_network", ip: "192.168.100.7"
     control.vm.hostname = "ansible.internal"
-
-    # SSH Key 설정
-    control.vm.provision "shell", inline: "cat /vagrant/ssh_key/authorized_keys >> ~/.ssh/authorized_keys", privileged: false
-    control.vm.provision "shell", inline: "cp /vagrant/ssh_key/lab.pem ~/.ssh/lab.pem && chmod 600 ~/.ssh/lab.pem", privileged: false
+    
+    config.vm.boot_timeout = 60
 
     # Python Version 설정
     control.vm.provision "shell", inline: "update-alternatives --install /usr/bin/python python /usr/bin/python3.6 2"
@@ -52,6 +50,7 @@ Vagrant.configure("2") do |config|
 
     # Ansible 환경 설정
     control.vm.provision "shell", inline: "cp -r /vagrant/ansible ~/", privileged: false
+    control.vm.provision "shell", inline: "cp  /vagrant/ssh_key/lab.pem ~/.ssh/ && chmod 600 ~/.ssh/lab.pem", privileged: false
   end
 
 end
