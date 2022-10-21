@@ -46,7 +46,7 @@ Vagrant.configure("2") do |config|
     control.vm.provision "shell", inline: "apt update -y && apt-add-repository --yes --update ppa:ansible/ansible"
 
     # Ansible 설치
-    control.vm.provision "shell", inline: "sudo apt install -y ansible"
+    control.vm.provision "shell", inline: "apt install -y ansible"
 
     # Ansible 환경 설정
     control.vm.provision "shell", inline: "cp -r /vagrant/ansible ~/", privileged: false
