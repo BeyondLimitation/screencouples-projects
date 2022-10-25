@@ -1,0 +1,10 @@
+- name: Software 설치
+  hosts: ubuntu
+  tasks:
+
+    - name: screenfetch 설치
+      apt:
+        pkg: screenfetch
+        state: latest
+        update_cache: yes
+        install_recommends: no
